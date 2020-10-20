@@ -2189,6 +2189,14 @@ void Manager::verTodosOsAlunosDaEscola()
 
     extrairAlunosDeTodaAEscola(deque_alunos);
 
+    if(deque_alunos.empty())
+    {
+        cout << endl << endl << "Vazio..." << endl;
+
+        util::pressionarEnter();
+        verAlunos();
+    }
+
     ordenar(deque_alunos);
 
     cabecalho();
