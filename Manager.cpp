@@ -1800,12 +1800,13 @@ void Manager::displayAlunos(deque<Estudante> deque_alunos_por_turma, bool opcao_
 
     d +=10;
 
+    char ch;
     if (opcao_vista == true)
     {
         cout << "   \t\t" << "1. Ver Basico" << endl;
         cout << "   \t\t" << "2. Ver Completo" << endl;
         cout << "   \t\t"  << "->";
-        char ch = _getch();
+        ch = _getch();
 
         while (ch != '1' && ch != '2')
         {
@@ -1831,57 +1832,38 @@ void Manager::displayAlunos(deque<Estudante> deque_alunos_por_turma, bool opcao_
                 cout << setw(30) << deque_alunos_por_turma[i].morada << endl;
             }
         }
-
-        if (ch == '2')
-        {
-            util::ajustarTamanhoJanela(util::TamanhoConsole::Aumentada);
-
-            cout <<  left << setw(d) << "Nome" << setw(5) << "N." << setw(10) << "Turma";
-            cout << setw(10) << "Genero" << setw(22) << "Data De Nascimento" <<  setw(10) << "Idade";
-            cout << setw(18) << "Estado Civil" << setw(15) << "N. BI" << setw(30) << "Morada" << endl;
-
-            for ( int i = 0; i < len; ++i)
-            {
-                util::adicionarEspacos(deque_alunos_por_turma[i].nome_completo);
-                util::adicionarEspacos( deque_alunos_por_turma[i].morada);
-
-                cout << setw(d) << deque_alunos_por_turma[i].nome_completo;
-                cout << setw(5) << deque_alunos_por_turma[i].numero_do_aluno;
-                cout << setw(10) << deque_alunos_por_turma[i].ano_escolaridade + deque_alunos_por_turma[i].turma;
-                cout << setw(10) << deque_alunos_por_turma[i].genero;
-                cout << setw(22) << deque_alunos_por_turma[i].data_de_nascimento;
-                cout << setw(10) << deque_alunos_por_turma[i].idade;
-                cout << setw(18) << deque_alunos_por_turma[i].estado_civil;
-                cout << setw(15) << deque_alunos_por_turma[i].numero_identificacao_civil;
-                cout << setw(30) << deque_alunos_por_turma[i].morada << endl;
-            }
-        }
-
-        util::pressionarEnter();
-
-        util::ajustarTamanhoJanela(util::TamanhoConsole::Normal);
     }
-    else
-    {
-        cout <<  left << setw(50) << "Nome" << setw(5) << "N." << setw(10) << "Turma";
-        cout << setw(10) << "Genero" << setw(25) << "Data De Nascimento" <<  setw(15) << "Idade";
-        cout << setw(20) << "Estado Civil" << setw(15) << "N. BI" << setw(30) << "Morada" << endl;
 
-        for ( int i = 0, len = deque_alunos_por_turma.size(); i < len; ++i)
+    if (ch == '2' || ! opcao_vista)
+    {
+        util::ajustarTamanhoJanela(util::TamanhoConsole::Aumentada);
+
+        cout <<  left << setw(d) << "Nome" << setw(5) << "N." << setw(10) << "Turma";
+        cout << setw(10) << "Genero" << setw(22) << "Data De Nascimento" <<  setw(10) << "Idade";
+        cout << setw(18) << "Estado Civil" << setw(15) << "N. BI" << setw(30) << "Morada" << endl;
+
+        for ( int i = 0; i < len; ++i)
         {
             util::adicionarEspacos(deque_alunos_por_turma[i].nome_completo);
             util::adicionarEspacos( deque_alunos_por_turma[i].morada);
 
-            cout << setw(50) << deque_alunos_por_turma[i].nome_completo;
+            cout << setw(d) << deque_alunos_por_turma[i].nome_completo;
             cout << setw(5) << deque_alunos_por_turma[i].numero_do_aluno;
             cout << setw(10) << deque_alunos_por_turma[i].ano_escolaridade + deque_alunos_por_turma[i].turma;
             cout << setw(10) << deque_alunos_por_turma[i].genero;
-            cout << setw(25) << deque_alunos_por_turma[i].data_de_nascimento;
-            cout << setw(15) << deque_alunos_por_turma[i].idade;
-            cout << setw(20) << deque_alunos_por_turma[i].estado_civil;
+            cout << setw(22) << deque_alunos_por_turma[i].data_de_nascimento;
+            cout << setw(10) << deque_alunos_por_turma[i].idade;
+            cout << setw(18) << deque_alunos_por_turma[i].estado_civil;
             cout << setw(15) << deque_alunos_por_turma[i].numero_identificacao_civil;
             cout << setw(30) << deque_alunos_por_turma[i].morada << endl;
         }
+    }
+
+    if( opcao_vista )
+    {
+        util::pressionarEnter();
+
+        util::ajustarTamanhoJanela(util::TamanhoConsole::Normal);
     }
 
     cout << right;
