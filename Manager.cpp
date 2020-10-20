@@ -4283,10 +4283,11 @@ void Manager::transferirAlunoDeTurma()
 
         displayAlunos(deque_aluno_a_editar, false);
 
+        cout << endl;
         cout  << " 1. Entrar de novo" << endl;
         cout << " 2. Transferir" << endl;
         cout << " 0. Cancelar" << endl;
-        cout << "   \t\t" << " -> ";
+        cout << " -> ";
         char opt = _getch();
 
         while (opt != '1' && opt != '2' && opt != '0')
@@ -4296,6 +4297,7 @@ void Manager::transferirAlunoDeTurma()
 
         if (opt == '1')
         {
+            util::ajustarTamanhoJanela(util::TamanhoConsole::Normal);
             transferirAlunoDeTurma();
         }
 
@@ -4320,6 +4322,7 @@ void Manager::transferirAlunoDeTurma()
 
         if (opt == '0')
         {
+            util::ajustarTamanhoJanela(util::TamanhoConsole::Normal);
             editarAlunos();
         }
     }
