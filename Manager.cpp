@@ -4135,9 +4135,9 @@ void Manager::editarInformacoesDoAluno(bool editar_tudo, int opcao, deque<Estuda
         util::inputRestriction(1, 2, true, this, &Manager::editarAlunos, opt);
 
         if ( opt == 1)
-            aluno_a_edtitar[0].genero = "M";
+            aluno_a_edtitar[0].genero = 'M';
         if (opt == 2)
-            aluno_a_edtitar[0].genero  = "F";
+            aluno_a_edtitar[0].genero  = 'F';
     }
 
     if (editar_tudo || opcao == 5)
@@ -4614,12 +4614,12 @@ int  Manager::contarNumeroDeAlunosPeloGenero(deque<Estudante>& alunos, char opca
     {
         if (opcao_de_genero == '1')
         {
-            if (alunos[i].genero == "M")
+            if (alunos[i].genero == 'M')
                 ++numero_de_alunos;
         }
         else if (opcao_de_genero == '2')
         {
-            if (alunos[i].genero == "F")
+            if (alunos[i].genero == 'F')
                 ++numero_de_alunos;
         }
         else if (opcao_de_genero == '3')

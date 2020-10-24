@@ -9,7 +9,7 @@ public:
     std::string nome;
     std::string apelido;
     std::string nome_completo;
-    std::string genero;
+    char genero;
 
     int dia_nascimento;
     int mes_nascimento;
