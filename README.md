@@ -12,7 +12,7 @@ I wrote this program a long time ago and even though a lot has been improved, it
 # Features
 - Register students
 
-- Look up students by name, birthday, birth month and year, age, addres
+- Look up students by name, birthday, birth month and year, age, address
 - Transfer tudents from one class to another
 - Edit students' informations 
 - Remove students from the system
