@@ -3846,7 +3846,7 @@ void Manager::pesquisarN_BI()
 
     extrairAlunosDeTodaAEscola(deque_alunos);
 
-    encontrarAlunosPeloNumeroBI(deque_alunos, alunos_encontrados, to_string(n_bi));
+    encontrarAlunosPeloNumeroBI(deque_alunos, alunos_encontrados, n_bi);
 
     if (alunos_encontrados.empty())
     {
@@ -4157,9 +4157,8 @@ void Manager::editarInformacoesDoAluno(bool editar_tudo, int opcao, deque<Estuda
 
     if (editar_tudo || opcao == 6)
     {
-        int opt;
         cout << endl << endl << "  Novo Numero de Identificacao Civil: ";
-        aluno_a_edtitar[0].numero_identificacao_civil = util::inputRestriction(6, 1000000, false, this, &Manager::editarAlunos, opt);
+        util::inputRestriction(6, 1000000, false, this, &Manager::editarAlunos, aluno_a_edtitar[0].numero_identificacao_civil);
     }
 }
 
@@ -4595,7 +4594,7 @@ void Manager::encontrarAlunosPelo_Mes_Ano_Nascimento(deque<Estudante>& alunos, d
     }
 }
 
-void Manager::encontrarAlunosPeloNumeroBI(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, string n_bi)
+void Manager::encontrarAlunosPeloNumeroBI(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, int n_bi)
 {
     for ( int i = 0, len = alunos.size(); i < len; ++i)
     {

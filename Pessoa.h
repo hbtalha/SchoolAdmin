@@ -21,7 +21,7 @@ public:
     std::string morada;
     std::string nacionalidade;
     std::string estado_civil;
-    std::string numero_identificacao_civil;
+    int numero_identificacao_civil;
 
 protected:
     Pessoa() {}

@@ -148,7 +148,7 @@ private:
     void encontrarAlunosPeloAnoNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int ano_nascimento_);
     void encontrarAlunosPeloMesNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int mes_nascimento_);
     void encontrarAlunosPelo_Mes_Ano_Nascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string mes_ano);
-    void encontrarAlunosPeloNumeroBI(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string n_bi);
+    void encontrarAlunosPeloNumeroBI(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int n_bi);
 
     void atribuirNumeroAosAlunos_e_OrganizarPorOdemAlfabetica(std::string file_path, Estudante estud);
 
