@@ -301,8 +301,6 @@ string inputRestriction(int length_limit, int limite, bool chck, Manager *m, voi
 
 void criarPastasPrincipais()
 {
-    class stat info;
-
     create_directories(Diretorios::ESCOLAS_INFO);
 
     create_directories(Diretorios::ESCOLAS);

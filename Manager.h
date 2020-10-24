@@ -142,16 +142,16 @@ private:
     void transferirUmAlunoDeTurma(std::deque<Estudante>& deque_alunos);
 
     void encontrarAlunosPeloNome(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string nome_de_pesquisa);
-    void encontrarAlunosPelaIdade(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string idade);
+    void encontrarAlunosPelaIdade(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int idade);
     void encontrarAlunosPelaMorada(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string morada);
     void encontrarAlunosPelaDataNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string data_nascimento);
-    void encontrarAlunosPeloAnoNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string ano_nascimento_);
-    void encontrarAlunosPeloMesNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string mes_nascimento_);
+    void encontrarAlunosPeloAnoNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int ano_nascimento_);
+    void encontrarAlunosPeloMesNascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, int mes_nascimento_);
     void encontrarAlunosPelo_Mes_Ano_Nascimento(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string mes_ano);
     void encontrarAlunosPeloNumeroBI(std::deque<Estudante>& alunos, std::deque<Estudante>& alunos_encontrados, std::string n_bi);
 
     void atribuirNumeroAosAlunos_e_OrganizarPorOdemAlfabetica(std::string file_path, Estudante estud);
-    void estabelecerIdadeDosAlunos(std::string ano, std::string mes, std::string dia, std::string& idade);
+
     void atualizarIdadeDosAlunosdeTodaAEscola();
 
     void ordenar(std::deque<Estudante>& alunos);

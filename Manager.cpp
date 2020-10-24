@@ -767,7 +767,7 @@ void Manager::apagarTurmasDeClasseSelecionada(string file_path, string ano_de_es
 // as turmas naquela classe ficarao A, B, C, ao em vez de A, C, D
 void Manager::reajustarAsTurmasAposEliminacao(string ano_de_escolaridade)
 {
-    string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_de_escolaridade + "/";
+    string dir_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_de_escolaridade + "/";
 
     int indice = 0;
     bool ocorreu_erro = false;
@@ -776,14 +776,14 @@ void Manager::reajustarAsTurmasAposEliminacao(string ano_de_escolaridade)
     {
         if(stoi(ano_de_escolaridade.c_str()) < 11)
         {
-            if(std::filesystem::exists(file_path))
+            if(std::filesystem::exists(dir_path))
             {
-                for(const auto& it : std::filesystem::directory_iterator(file_path))
+                for(const auto& it : std::filesystem::directory_iterator(dir_path))
                     if(std::filesystem::is_regular_file(it.path()))
                     {
                         util::set_a_FileAttribute_To_ReadOnly_or_Normal(it.path().string().c_str(), FILE_ATTRIBUTE_NORMAL);
 
-                        string new_file_name = file_path + vecTurmas[ indice++ ];
+                        string new_file_name = dir_path + vecTurmas[ indice++ ];
 
                         if (it.path().string() != new_file_name)
                         {
@@ -806,12 +806,12 @@ void Manager::reajustarAsTurmasAposEliminacao(string ano_de_escolaridade)
 
             int ind = 1;
             for( int j = 0, len = area_3_ciclo_path.size(); j < len; ++j)
-                if(std::filesystem::exists(area_3_ciclo_path[ j ]))
+                if(std::filesystem::exists(dir_path + area_3_ciclo_path[ j ]))
                 {
-                    for(const auto& it : std::filesystem::directory_iterator(file_path + area_3_ciclo_path[ j ]))
+                    for(const auto& it : std::filesystem::directory_iterator(dir_path + area_3_ciclo_path[ j ]))
                         if(std::filesystem::is_regular_file(it.path()))
                         {
-                            string new_file_name = area_3_ciclo_path[ j ] + file_name_3_ciclo[ j ] + to_string(ind++);
+                            string new_file_name = dir_path + area_3_ciclo_path[ j ] + file_name_3_ciclo[ j ] + to_string(ind++);
 
                             util::set_a_FileAttribute_To_ReadOnly_or_Normal(it.path().string().c_str(), FILE_ATTRIBUTE_NORMAL);
 
@@ -1421,7 +1421,7 @@ void Manager::inserirTurma(string& turma_path, string& ano_escolaridade, string&
             cout << endl << "   \t\t" << "   Turma Nao Existe";
             cout << endl << endl << "   \t\t" << "    1-> Entrar de novo";
             cout << setw(25) << "2-> Registar Turmas";
-            cout  << setw(20) << "3-> Cancelar";
+            cout  << setw(20) << "0-> Cancelar";
             cout << endl << endl << "   \t\t" << "   Escolha a opcao: ";
             char opt = _getch();
 
@@ -1506,9 +1506,7 @@ void Manager::registarAlunos()
     string ano_escolaridade_, turma_;
     string turma_3_ciclo;
 
-    string ano_nascimento, mes_nascimento, dia_nascimento;
-    int ano_nascimento_, mes_nascimento_, dia_nascimento_;
-
+    int ano_nascimento, mes_nascimento, dia_nascimento;
 
     cout << "   \t\t" << "\t\t" << "Registar Alunos" << endl << endl;
 
@@ -1520,6 +1518,7 @@ void Manager::registarAlunos()
     cout << endl << "   \t\t" <<  "  Apelido: ";
     util::validarInput(apelido, this, &Manager::paginaInicialAlunos);
 
+
     cout << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << "   \t\t" << "   Ano: ";
 
@@ -1527,9 +1526,9 @@ void Manager::registarAlunos()
 
     while(ano_nascimento_minimo == true)
     {
-        ano_nascimento = util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento_);
+        util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento);
 
-        if(ano_nascimento_ < 1904)
+        if(ano_nascimento < 1904)
         {
             cout << "\b \b\b \b\b \b\b \b";;
         }
@@ -1538,12 +1537,12 @@ void Manager::registarAlunos()
     }
 
     cout << endl << "   \t\t" << "   Mes: ";
-    mes_nascimento = util::inputRestriction(2, 12, true, this, &Manager::paginaInicialAlunos, mes_nascimento_);
+    util::inputRestriction(2, 12, true, this, &Manager::paginaInicialAlunos, mes_nascimento);
 
     cout << endl << "   \t\t" << "   Dia: ";
-    dia_nascimento = util::inputRestriction(2, 31, true, this, &Manager::paginaInicialAlunos, dia_nascimento_);
+    util::inputRestriction(2, 31, true, this, &Manager::paginaInicialAlunos, dia_nascimento);
 
-    while (! util::dataValido(ano_nascimento_, mes_nascimento_, dia_nascimento_))
+    while (! util::dataValido(ano_nascimento, mes_nascimento, dia_nascimento))
     {
         cout << endl << endl << "   \t\t" <<  "  Data Invalido" << endl;
         cout << "   \t\t" << "   Ano: ";
@@ -1552,9 +1551,9 @@ void Manager::registarAlunos()
 
         while(ano_nascimento_minimo == true)
         {
-            ano_nascimento = util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento_);
+            util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento);
 
-            if(ano_nascimento_ < 1904)
+            if(ano_nascimento < 1904)
             {
                 cout << "\b \b\b \b\b \b\b \b";
             }
@@ -1562,13 +1561,13 @@ void Manager::registarAlunos()
                 ano_nascimento_minimo = false;
         }
 
-        ano_nascimento = util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento_);
+        util::inputRestriction(4, presente_ano, false, this, &Manager::paginaInicialAlunos, ano_nascimento);
 
         cout << endl << "   \t\t" << "   Mes: ";
-        mes_nascimento = util::inputRestriction(2, 12, true, this, &Manager::paginaInicialAlunos, mes_nascimento_);
+        util::inputRestriction(2, 12, true, this, &Manager::paginaInicialAlunos, mes_nascimento);
 
         cout << endl << "   \t\t" << "   Dia: ";
-        dia_nascimento = util::inputRestriction(2, 31, true, this, &Manager::paginaInicialAlunos, dia_nascimento_);
+        util::inputRestriction(2, 31, true, this, &Manager::paginaInicialAlunos, dia_nascimento);
     }
 
     cout << endl << endl << "   \t\t" << "  Genero:" << endl;
@@ -1605,17 +1604,26 @@ void Manager::registarAlunos()
     cout << endl << endl << "   \t\t" << "  Numero de Identificacao Civil: ";
     numero_identificacao_civil = util::inputRestriction(6, 1000000, false, this, &Manager::paginaInicialAlunos, opt); // esse int "opt' é passado como parametro apenas para completar a funcao, nao será usada
 
-    cout << endl <<  endl << "   \t\t" << "-> Informacoes Como Estudante" << endl << endl;
+    cout << endl << endl << "   \t\t" << "-> Informacoes Como Estudante" << endl << endl;
 
     string file_path;
 
     inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::paginaInicialAlunos);
 
-    estabelecerIdadeDosAlunos(ano_nascimento, mes_nascimento, dia_nascimento, idade);
+    util::regularizarNomes(nome);
 
-    string info_estudante = nome + " " + apelido + " " + genero + " " + dia_nascimento +
-                            " " + mes_nascimento + " "+ ano_nascimento + " " + idade + " " +  morada + " " + nacionalidade + " "
-                            + estado_civil + " " + numero_identificacao_civil + " " + ano_escolaridade_ + " " + turma_ + " " + "1";
+    string info_estudante = nome + " " +
+                            apelido + " " +
+                            genero + " " +
+                            to_string(dia_nascimento) + " " +
+                            to_string(mes_nascimento) + " " +
+                            to_string(ano_nascimento) + " " +
+                            morada + " " +
+                            nacionalidade + " "
+                            + estado_civil + " " +
+                            numero_identificacao_civil + " " +
+                            ano_escolaridade_ + " " +
+                            turma_ + " " + "1";
 
 
     if (util::seFicheiroVazio(this, &paginaInicial, file_path, "registarAlunos"))
@@ -1648,48 +1656,6 @@ void Manager::registarAlunos()
     Sleep(1000);
 
     paginaInicialAlunos();
-}
-
-void Manager::estabelecerIdadeDosAlunos(string ano, string mes, string dia, string& idade)
-{
-    time_t now = time(nullptr);
-    tm* agora = localtime(&now);
-
-    int presente_ano = 1900 + agora->tm_year;
-
-    int ano_nascimento = stoi(ano.c_str());
-    int mes_nascimento = stoi(mes.c_str());
-    int dia_nascimento = stoi(dia.c_str());
-
-    int presente_mes = agora->tm_mon + 1;
-
-    if (mes_nascimento > presente_mes)
-    {
-        int idade_ = presente_ano - ano_nascimento -1;
-
-        idade = to_string(idade_);
-    }
-    else if (mes_nascimento == presente_mes)
-    {
-        if (dia_nascimento <= agora->tm_mday)
-        {
-            int idade_ = presente_ano - ano_nascimento;
-
-            idade = to_string(idade_);
-        }
-        else
-        {
-            int idade_ = presente_ano - ano_nascimento - 1;
-
-            idade = to_string(idade_);
-        }
-    }
-    else if (mes_nascimento < presente_mes)
-    {
-        int idade_ = presente_ano - ano_nascimento;
-
-        idade = to_string(idade_);
-    }
 }
 
 // essa funcao será chamada toda vez que o programa for executado e serve para atualizar as idades dos alunos
@@ -1766,16 +1732,14 @@ void Manager::atribuirNumeroAosAlunos_e_OrganizarPorOdemAlfabetica(std::string f
     {
         string str_numero_do_aluno = to_string(i+1);
         dequeEstdnt[i].numero_do_aluno = str_numero_do_aluno;
-
-        estabelecerIdadeDosAlunos(dequeEstdnt[i].ano_nascimento, dequeEstdnt[i].mes_nascimento, dequeEstdnt[i].dia_nascimento, dequeEstdnt[i].idade);
     }
 
     util::set_a_FileAttribute_To_ReadOnly_or_Normal(file_path, FILE_ATTRIBUTE_NORMAL);
 
     ofstream file(file_path);
 
-    for ( int i = 0, len = dequeEstdnt.size(); i < len; ++i)
-        file << dequeEstdnt[i] << endl;
+    for (auto e : dequeEstdnt)
+        file << e << endl;
 
     file.close();
 
@@ -1823,7 +1787,7 @@ void Manager::displayAlunos(deque<Estudante> deque_alunos_por_turma, bool opcao_
             for ( int i = 0; i < len; ++i)
             {
                 util::adicionarEspacos(deque_alunos_por_turma[i].nome_completo);
-                util::adicionarEspacos( deque_alunos_por_turma[i].morada);
+                util::adicionarEspacos(deque_alunos_por_turma[i].morada);
 
                 cout << "   \t\t" << setw(d) << deque_alunos_por_turma[i].nome_completo;
                 cout << setw(5) << deque_alunos_por_turma[i].numero_do_aluno;
@@ -1954,7 +1918,6 @@ void Manager::extrairAlunosDeUmaClasse(deque<Estudante>& deque_alunos_por_classe
         paginaInicial();
     }
 }
-
 
 void Manager::extrairAlunosDeTodaAEscola(deque <Estudante>& alunos)
 {
@@ -2330,7 +2293,6 @@ void Manager::verNumeroDeAlunosEntreClasses(char opcao_de_genero)
     util::pressionarEnter();
 
     verAlunos();
-
 }
 
 void Manager::verNumeroDeAlunosEmTodaAEscola(char opcao_de_genero)
@@ -2518,7 +2480,8 @@ void Manager::pesquisarNomesEntreClasses()
 
     int registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB;
 
-    inserirAnoDeEscolaridadeEntreClasses(registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB, &Manager::pesquisarNomes);
+    inserirAnoDeEscolaridadeEntreClasses(registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB,
+                                         &Manager::pesquisarNomes);
 
     cout << endl << endl << "   \t\t" << "Pesquisar Nome: ";
     util::validarInput(nome_de_pesquisa, this, &Manager::pesquisarNomes);
@@ -2641,8 +2604,8 @@ void Manager::pesquisarIdadeNumaClasse()
 {
     cabecalho();
 
-    string ano_escolaridade_, idade_do_aluno;
-    int idade_do_aluno_;
+    string ano_escolaridade_;
+    int idade_do_aluno;
 
     deque<Estudante> deque_alunos;
     deque<Estudante> alunos_encontrados;
@@ -2657,7 +2620,7 @@ void Manager::pesquisarIdadeNumaClasse()
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_escolaridade_ + "/";
 
     cout << endl << endl << "   \t\t" << "Inserir Idade Para Pesquisa: ";
-    idade_do_aluno = util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno_ );
+    util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno);
 
     extrairAlunosDeUmaClasse(deque_alunos, file_path, ano_escolaridade_);
 
@@ -2691,15 +2654,14 @@ void Manager::pesquisarIdadeEntreClasses()
     deque<Estudante> deque_alunos;
     deque<Estudante> alunos_encontrados;
 
-    string idade_do_aluno;
-    int idade_do_aluno_;
+    int idade_do_aluno;
 
     int registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB;
 
     inserirAnoDeEscolaridadeEntreClasses(registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB, &Manager::pesquisarPorIdade);
 
     cout << endl << endl << "   \t\t" << "Inserir Idade Para Pesquisa: ";
-    idade_do_aluno = util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno_ );
+    util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno );
 
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/";
 
@@ -2738,13 +2700,12 @@ void Manager::pesquisarIdadeEmTodaAEsola()
     deque<Estudante> deque_alunos;
     deque<Estudante> alunos_encontrados;
 
-    string idade_do_aluno;
-    int idade_do_aluno_;
+    int idade_do_aluno;
 
     cout << "   \t\t" << "\t" << "Pesquisar Alunos Em Toda A Escola" << endl << endl;
 
     cout << "   \t\t" << "Inserir Idade Para Pesquisa: ";
-    idade_do_aluno = util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno_ );
+    util::inputRestriction(2, 25, true, this, &Manager::pesquisarPorIdade, idade_do_aluno );
 
     extrairAlunosDeTodaAEscola(deque_alunos);
 
@@ -3344,17 +3305,17 @@ void Manager::pesquisarAnoNascimentoNumaClasse()
 
     int presente_ano = 1900 + agora->tm_year;
 
-    int ano_nascimento_;
+    int ano_nascimento;
 
     cout << endl << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << endl << "   \t\t" << "   Mes: ";
-    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento_);
+    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento);
 
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + to_string(ano_escolaridade_) + "/";
 
     extrairAlunosDeUmaClasse(deque_alunos, file_path, to_string(ano_escolaridade_));
 
-    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, to_string(ano_nascimento_));
+    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, ano_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -3395,11 +3356,11 @@ void Manager::pesquisarAnoNascimentoEntreClasses()
 
     int presente_ano = 1900 + agora->tm_year;
 
-    int ano_nascimento_;
+    int ano_nascimento;
 
     cout << endl << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << "   \t\t" << "   Ano: ";
-    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento_);
+    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento);
 
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/";
 
@@ -3410,7 +3371,7 @@ void Manager::pesquisarAnoNascimentoEntreClasses()
         extrairAlunosDeUmaClasse(deque_alunos, file_path + classe_ + "/", classe_);
     }
 
-    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, to_string(ano_nascimento_));
+    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, ano_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -3447,15 +3408,15 @@ void Manager::pesquisarAnoNascimentoEmTodaAEscola()
 
     int presente_ano = 1900 + agora->tm_year;
 
-    int ano_nascimento_;
+    int ano_nascimento;
 
     cout << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << "   \t\t" << "   Ano: ";
-    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento_);
+    util::inputRestriction(4, presente_ano, false, this, &Manager::pesquisarAnoNascimento, ano_nascimento);
 
     extrairAlunosDeTodaAEscola(deque_alunos);
 
-    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, to_string(ano_nascimento_));
+    encontrarAlunosPeloAnoNascimento(deque_alunos, alunos_encontrados, ano_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -3535,17 +3496,17 @@ void Manager::pesquisarMesNascimentoNumaClasse()
     cout << "   \t\t" << "Ano De Escolaridade (1 -12): ";
     ano_escolaridade_ = util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, registo_de_ano_escolaridade);
 
-    int mes_nascimento_;
+    int mes_nascimento;
 
     cout << endl << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << endl << "   \t\t" << "   Mes: ";
-    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento_);
+    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento);
 
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_escolaridade_ + "/";
 
     extrairAlunosDeUmaClasse(deque_alunos, file_path, ano_escolaridade_);
 
-    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, to_string(mes_nascimento_));
+    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, mes_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -3581,11 +3542,11 @@ void Manager::pesquisarMesNascimentoEntreClasses()
 
     inserirAnoDeEscolaridadeEntreClasses(registo_de_ano_escolaridadeA, registo_de_ano_escolaridadeB, &Manager::pesquisarMesNascimento);
 
-    int  mes_nascimento_;
+    int  mes_nascimento;
 
     cout << endl << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << endl << "   \t\t" << "   Mes: ";
-    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento_);
+    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento);
 
     string file_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/";
 
@@ -3596,7 +3557,7 @@ void Manager::pesquisarMesNascimentoEntreClasses()
         extrairAlunosDeUmaClasse(deque_alunos, file_path + classe_ + "/", classe_);
     }
 
-    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, to_string(mes_nascimento_));
+    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, mes_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -3628,15 +3589,15 @@ void Manager::pesquisarMesNascimentoEmTodaAEscola()
 
     cout << "   \t\t" << "Pesquisar Alunos Pelo Mes De Nascimento Em Toda A Escola" << endl << endl;
 
-    int mes_nascimento_;
+    int mes_nascimento;
 
     cout << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << endl << "   \t\t" << "   Mes: ";
-    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento_);
+    util::inputRestriction(2, 12, true, this, &Manager::pesquisarMesNascimento, mes_nascimento);
 
     extrairAlunosDeTodaAEscola(deque_alunos);
 
-    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, to_string(mes_nascimento_));
+    encontrarAlunosPeloMesNascimento(deque_alunos, alunos_encontrados, mes_nascimento);
 
     if (alunos_encontrados.empty())
     {
@@ -4134,25 +4095,25 @@ void Manager::editarInformacoesDoAluno(bool editar_tudo, int opcao, deque<Estuda
 
         cout << endl << "  Nova Data De Nascimento: " << endl;
         cout << "   Ano: ";
-        aluno_a_edtitar[0].ano_nascimento = util::inputRestriction(4, presente_ano, false, this, &Manager::editarAlunos, ano_nascimento_);
+        util::inputRestriction(4, presente_ano, false, this, &Manager::editarAlunos, aluno_a_edtitar[0].ano_nascimento);
 
         cout << endl << "   Mes: ";
-        aluno_a_edtitar[0].mes_nascimento = util::inputRestriction(2, 12, true, this, &Manager::editarAlunos, mes_nascimento_);
+        util::inputRestriction(2, 12, true, this, &Manager::editarAlunos, aluno_a_edtitar[0].mes_nascimento);
 
         cout << endl << "   Dia: ";
-        aluno_a_edtitar[0].dia_nascimento = util::inputRestriction(2, 31, true, this, &Manager::editarAlunos, dia_nascimento_);
+        util::inputRestriction(2, 31, true, this, &Manager::editarAlunos, aluno_a_edtitar[0].dia_nascimento);
 
         while (! util::dataValido(ano_nascimento_, mes_nascimento_, dia_nascimento_))
         {
             cout << endl << endl <<  "  Data Invalido" << endl;
             cout << "   Ano: ";
-            aluno_a_edtitar[0].ano_nascimento = util::inputRestriction(4, presente_ano, false, this, &Manager::editarAlunos, ano_nascimento_);
+            util::inputRestriction(4, presente_ano, false, this, &Manager::editarAlunos, aluno_a_edtitar[0].ano_nascimento);
 
             cout << endl << "   Mes: ";
-            aluno_a_edtitar[0].mes_nascimento = util::inputRestriction(2, 12, true, this, &Manager::editarAlunos, mes_nascimento_);
+            util::inputRestriction(2, 12, true, this, &Manager::editarAlunos, aluno_a_edtitar[0].mes_nascimento);
 
             cout << endl << "   Dia: ";
-            aluno_a_edtitar[0].dia_nascimento = util::inputRestriction(2, 31, true, this, &Manager::editarAlunos, dia_nascimento_);
+            util::inputRestriction(2, 31, true, this, &Manager::editarAlunos, aluno_a_edtitar[0].dia_nascimento);
         }
     }
 
@@ -4336,7 +4297,7 @@ void Manager::transferirUmAlunoDeTurma(deque<Estudante>& deque_alunos)
 
     displayAlunos(deque_alunos, false);
 
-    cout << "Para Turma:" <<endl << endl;
+    cout << endl << "Para Turma:" <<endl << endl;
 
     string file_path, ano_escolaridade_, turma_, numero_do_aluno_;
     deque <Estudante> deque_alunos_;
@@ -4504,9 +4465,6 @@ void Manager::atualizarTurmaAposEdicao(string file_path, deque<Estudante>& deque
     for ( int i = 0, len = deque_alunos.size(); i < len; ++i)
     {
         deque_alunos[i].numero_do_aluno = to_string(i+1);
-
-        estabelecerIdadeDosAlunos(deque_alunos[i].ano_nascimento, deque_alunos[i].mes_nascimento,
-                                  deque_alunos[i].dia_nascimento, deque_alunos[i].idade);
     }
 
     util::set_a_FileAttribute_To_ReadOnly_or_Normal(file_path, FILE_ATTRIBUTE_NORMAL);
@@ -4576,7 +4534,7 @@ void Manager::encontrarAlunosPeloNome(deque<Estudante>& alunos, deque<Estudante>
     }
 }
 
-void Manager::encontrarAlunosPelaIdade(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, string idade)
+void Manager::encontrarAlunosPelaIdade(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, int idade)
 {
     for ( int i = 0, len = alunos.size(); i < len; ++i)
     {
@@ -4605,7 +4563,7 @@ void Manager::encontrarAlunosPelaDataNascimento(deque<Estudante>& alunos, deque<
     }
 }
 
-void Manager::encontrarAlunosPeloAnoNascimento(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, string ano_nascimento_)
+void Manager::encontrarAlunosPeloAnoNascimento(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, int ano_nascimento_)
 {
     for (int i = 0, len = alunos.size(); i < len; ++i)
     {
@@ -4614,7 +4572,7 @@ void Manager::encontrarAlunosPeloAnoNascimento(deque<Estudante>& alunos, deque<E
     }
 }
 
-void Manager::encontrarAlunosPeloMesNascimento(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, string mes_nascimento_)
+void Manager::encontrarAlunosPeloMesNascimento(deque<Estudante>& alunos, deque<Estudante>& alunos_encontrados, int mes_nascimento_)
 {
     for ( int i = 0, len = alunos.size(); i < len; ++i)
     {
