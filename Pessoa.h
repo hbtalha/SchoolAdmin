@@ -40,7 +40,7 @@ protected:
 
         if(presente_mes < mes_nascimento)
             --idade;
-        else if(presente_dia < dia_nascimento)
+        else if(presente_mes == mes_nascimento && presente_dia < dia_nascimento)
             --idade;
 
         return idade;
