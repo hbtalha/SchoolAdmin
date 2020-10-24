@@ -40,6 +40,9 @@ void Estudante::registar (string estu_info)
 
     estud_info >> ano_escolaridade;
     estud_info >> turma;
+
+    ano_e_turma = to_string(ano_escolaridade) + turma;
+
     estud_info >> numero_do_aluno;
 }
 

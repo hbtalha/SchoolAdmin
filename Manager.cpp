@@ -589,7 +589,8 @@ void Manager::apagarUmaTurma()
 
     cout << "   \t\t" << "\t\t" << "Apagar Turma" << endl << endl;
 
-    string file_path, ano_escolaridade, turma;
+    string file_path, turma;
+    int ano_escolaridade;
 
     inserirTurma(file_path, ano_escolaridade, turma, &Manager::apagarTurmas);
 
@@ -765,16 +766,16 @@ void Manager::apagarTurmasDeClasseSelecionada(string file_path, string ano_de_es
 // Apos uma turma ser eliminada as turmas daquela classe serao reajustadas
 // p/ex Caso a classe tem turmas A, B, C, D, e a turma B for eliminada
 // as turmas naquela classe ficarao A, B, C, ao em vez de A, C, D
-void Manager::reajustarAsTurmasAposEliminacao(string ano_de_escolaridade)
+void Manager::reajustarAsTurmasAposEliminacao(int ano_de_escolaridade)
 {
-    string dir_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_de_escolaridade + "/";
+    string dir_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + to_string(ano_de_escolaridade) + "/";
 
     int indice = 0;
     bool ocorreu_erro = false;
 
     try
     {
-        if(stoi(ano_de_escolaridade.c_str()) < 11)
+        if(ano_de_escolaridade < 11)
         {
             if(std::filesystem::exists(dir_path))
             {
@@ -1297,18 +1298,16 @@ void Manager::paginaInicialAlunos()
     }
 }
 
-void Manager::inserirTurma(string& turma_path, string& ano_escolaridade, string& turma, auto (Manager::*funcao_de_retorno) ())
+void Manager::inserirTurma(string& turma_path, int& ano_escolaridade, string& turma, auto (Manager::*funcao_de_retorno) ())
 {
-    int registo_de_ano_escolaridade;
-
     string turma_3_ciclo;
 
     cout << "   \t\t" << "  Ano De Escolaridade (1 -12): ";
-    ano_escolaridade = util::inputRestriction(2, 12, true, this, funcao_de_retorno, registo_de_ano_escolaridade);
+    util::inputRestriction(2, 12, true, this, funcao_de_retorno, ano_escolaridade);
 
-    turma_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + ano_escolaridade + "/";
+    turma_path = Diretorios::ESCOLAS + escola.obterNomeDaEscola() + "/Classes/" + to_string(ano_escolaridade) + "/";
 
-    if (registo_de_ano_escolaridade < 11)
+    if (ano_escolaridade < 11)
     {
         cout << endl << endl << "   \t\t" << "  Turma (A - Z):";
         getline(cin, turma);
@@ -1458,7 +1457,7 @@ void Manager::inserirTurma(string& turma_path, string& ano_escolaridade, string&
         }
     }
 
-    if (registo_de_ano_escolaridade < 11)
+    if (ano_escolaridade < 11)
         turma_path += turma;
     else
     {
@@ -1503,8 +1502,8 @@ void Manager::registarAlunos()
 
     string nome, apelido, genero, idade, morada, nacionalidade, estado_civil, numero_identificacao_civil;
 
-    string ano_escolaridade_, turma_;
-    string turma_3_ciclo;
+    int ano_escolaridade;
+    string turma_3_ciclo, turma_;
 
     int ano_nascimento, mes_nascimento, dia_nascimento;
 
@@ -1517,7 +1516,6 @@ void Manager::registarAlunos()
 
     cout << endl << "   \t\t" <<  "  Apelido: ";
     util::validarInput(apelido, this, &Manager::paginaInicialAlunos);
-
 
     cout << endl << "   \t\t" << "  Data De Nascimento: " << endl;
     cout << "   \t\t" << "   Ano: ";
@@ -1608,7 +1606,7 @@ void Manager::registarAlunos()
 
     string file_path;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::paginaInicialAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::paginaInicialAlunos);
 
     util::regularizarNomes(nome);
 
@@ -1622,8 +1620,10 @@ void Manager::registarAlunos()
                             nacionalidade + " "
                             + estado_civil + " " +
                             numero_identificacao_civil + " " +
-                            ano_escolaridade_ + " " +
+                            to_string(ano_escolaridade) + " " +
                             turma_ + " " + "1";
+
+    cout << info_estudante;cin.get();
 
 
     if (util::seFicheiroVazio(this, &paginaInicial, file_path, "registarAlunos"))
@@ -1730,8 +1730,7 @@ void Manager::atribuirNumeroAosAlunos_e_OrganizarPorOdemAlfabetica(std::string f
 
     for ( int i = 0, len = dequeEstdnt.size(); i < len; ++i)
     {
-        string str_numero_do_aluno = to_string(i+1);
-        dequeEstdnt[i].numero_do_aluno = str_numero_do_aluno;
+        dequeEstdnt[i].numero_do_aluno = i+1;
     }
 
     util::set_a_FileAttribute_To_ReadOnly_or_Normal(file_path, FILE_ATTRIBUTE_NORMAL);
@@ -1791,7 +1790,7 @@ void Manager::displayAlunos(deque<Estudante> deque_alunos_por_turma, bool opcao_
 
                 cout << "   \t\t" << setw(d) << deque_alunos_por_turma[i].nome_completo;
                 cout << setw(5) << deque_alunos_por_turma[i].numero_do_aluno;
-                cout << setw(10) << deque_alunos_por_turma[i].ano_escolaridade + deque_alunos_por_turma[i].turma;
+                cout << setw(10) << deque_alunos_por_turma[i].ano_e_turma;
                 cout << setw(10) << deque_alunos_por_turma[i].idade;
                 cout << setw(30) << deque_alunos_por_turma[i].morada << endl;
             }
@@ -1813,7 +1812,7 @@ void Manager::displayAlunos(deque<Estudante> deque_alunos_por_turma, bool opcao_
 
             cout << setw(d) << deque_alunos_por_turma[i].nome_completo;
             cout << setw(5) << deque_alunos_por_turma[i].numero_do_aluno;
-            cout << setw(10) << deque_alunos_por_turma[i].ano_escolaridade + deque_alunos_por_turma[i].turma;
+            cout << setw(10) << deque_alunos_por_turma[i].ano_e_turma;
             cout << setw(10) << deque_alunos_por_turma[i].genero;
             cout << setw(22) << deque_alunos_por_turma[i].data_de_nascimento;
             cout << setw(10) << deque_alunos_por_turma[i].idade;
@@ -2061,9 +2060,10 @@ void Manager::verAlunosPorTurma()
 
     cout << "   \t\t" << "\t" << "Ver Alunos Numa Turma" << endl << endl;
 
-    string file_path, ano_escolaridade_, turma_;
+    string file_path, turma_;
+    int ano_escolaridade;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::verAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::verAlunos);
 
     deque<Estudante> deque_alunos_por_turma;
 
@@ -2074,7 +2074,8 @@ void Manager::verAlunosPorTurma()
 
     cabecalho();
 
-    cout << "   \t\t" << "Alunos Da Turma " << ano_escolaridade_ + turma_;
+    cout << "   \t\t" << "Alunos Da Turma " << ano_escolaridade;
+    cout << turma_;
 
     if (se_ficheiro_vazio)
     {
@@ -2115,7 +2116,8 @@ void Manager::verAlunosPorTurma()
 
         cabecalho();
 
-        cout << "   \t\t" << "Alunos Da Turma " << ano_escolaridade_ + turma_ << endl << endl;
+        cout << "   \t\t" << "Alunos Da Turma " << ano_escolaridade;
+        cout << turma_ << endl << endl;
 
         displayAlunos(deque_alunos_por_turma, true);
 
@@ -3918,12 +3920,12 @@ void Manager::editarInformacoesAluno()
 
     cout << "   \t\t" << "\t" << "Editar Informacoes De Um Aluno" << endl << endl;
 
-    string file_path, ano_escolaridade_, turma_;
-    int numero_do_aluno;
+    string file_path, turma_;
+    int numero_do_aluno, ano_escolaridade;
     deque <Estudante> deque_alunos;
     deque <Estudante> deque_aluno_a_editar;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::editarAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::editarAlunos);
 
     cout << endl << "   \t\t" << "  Inserir Numero Do Aluno: ";
     util::inputRestriction(2, 100, true, this, &Manager::editarAlunos, numero_do_aluno);
@@ -3958,7 +3960,7 @@ void Manager::editarInformacoesAluno()
 
     int indice_aluno;
 
-    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, to_string(numero_do_aluno));
+    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, numero_do_aluno);
 
     if (! aluno_encontrado)
     {
@@ -4167,12 +4169,12 @@ void Manager::transferirAlunoDeTurma()
 
     cout << "   \t\t" << "\t" << "Transferir Aluno De Turma" << endl << endl;
 
-    string file_path, ano_escolaridade_, turma_;
-    int numero_do_aluno;
+    string file_path, turma_;
+    int numero_do_aluno, ano_escolaridade;
     deque <Estudante> deque_alunos;
     deque <Estudante> deque_aluno_a_editar;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::editarAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::editarAlunos);
 
     cout << endl << "   \t\t" << "  Inserir Numero Do Aluno: ";
     util::inputRestriction(2, 100, true, this, &Manager::editarAlunos, numero_do_aluno);
@@ -4207,7 +4209,7 @@ void Manager::transferirAlunoDeTurma()
 
     int indice_aluno;
 
-    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, to_string(numero_do_aluno));
+    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, numero_do_aluno);
 
     if (! aluno_encontrado)
     {
@@ -4299,14 +4301,15 @@ void Manager::transferirUmAlunoDeTurma(deque<Estudante>& deque_alunos)
 
     cout << endl << "Para Turma:" <<endl << endl;
 
-    string file_path, ano_escolaridade_, turma_, numero_do_aluno_;
+    int ano_escolaridade;
+    string file_path, turma_, numero_do_aluno_;
     deque <Estudante> deque_alunos_;
     deque <Estudante> deque_aluno_a_editar;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::editarAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::editarAlunos);
 
     // mudar a turma e o ano da escolaridade antes de escrever as informacoes do aluno no novo ficheiro
-    deque_alunos[0].ano_escolaridade = ano_escolaridade_;
+    deque_alunos[0].ano_escolaridade = ano_escolaridade;
     deque_alunos[0].turma = turma_;
 
     if ( ! util::seFicheiroVazio(this, &paginaInicial, file_path, "transferirUmAlunoDeTurma"))
@@ -4323,12 +4326,12 @@ void Manager::apagarRegistoAluno()
 
     cout << "   \t\t" << "\t" << "Apagar Registo De Um Aluno" << endl << endl;
 
-    string file_path, ano_escolaridade_, turma_;
-    int numero_do_aluno;
+    string file_path, turma_;
+    int numero_do_aluno, ano_escolaridade;
     deque <Estudante> deque_alunos;
     deque <Estudante> deque_aluno_a_editar;
 
-    inserirTurma(file_path, ano_escolaridade_, turma_, &Manager::editarAlunos);
+    inserirTurma(file_path, ano_escolaridade, turma_, &Manager::editarAlunos);
 
     cout << endl << "   \t\t" << "  Inserir Numero Do Aluno: ";
     util::inputRestriction(2, 100, true, this, &Manager::editarAlunos, numero_do_aluno);
@@ -4363,7 +4366,7 @@ void Manager::apagarRegistoAluno()
 
     int indice_aluno;
 
-    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, to_string(numero_do_aluno));
+    bool aluno_encontrado = procurarAluno(deque_alunos, indice_aluno, numero_do_aluno);
 
     if (! aluno_encontrado)
     {
@@ -4446,10 +4449,10 @@ void Manager::apagarRegistoAluno()
     }
 }
 
-bool Manager::procurarAluno(deque<Estudante>& deque_alunos, int& indice_aluno, const string& numero_do_aluno_)
+bool Manager::procurarAluno(deque<Estudante>& deque_alunos, int& indice_aluno, const int& numero_do_aluno)
 {
     for ( int i = 0, len = deque_alunos.size(); i < len; ++i)
-        if (deque_alunos[i].numero_do_aluno == numero_do_aluno_)
+        if (deque_alunos[i].numero_do_aluno == numero_do_aluno)
         {
             indice_aluno = i;
             return true;
@@ -4464,7 +4467,7 @@ void Manager::atualizarTurmaAposEdicao(string file_path, deque<Estudante>& deque
 
     for ( int i = 0, len = deque_alunos.size(); i < len; ++i)
     {
-        deque_alunos[i].numero_do_aluno = to_string(i+1);
+        deque_alunos[i].numero_do_aluno = i+1;
     }
 
     util::set_a_FileAttribute_To_ReadOnly_or_Normal(file_path, FILE_ATTRIBUTE_NORMAL);

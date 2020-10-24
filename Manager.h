@@ -56,7 +56,7 @@ private:
     void apagarTurmasDeUmaClasse();
     void apagarTurmaSelecionada(std::string path);
     void apagarTurmasDeClasseSelecionada(std::string path, std::string ano_de_escolaridade);
-    void reajustarAsTurmasAposEliminacao(std::string ano_de_escolaridade);
+    void reajustarAsTurmasAposEliminacao(int ano_de_escolaridade);
 
     void verTurmas();
     void verTurmasPorClasse();
@@ -88,7 +88,7 @@ private:
     void verNumeroDeAlunosEmTodaAEscola(char opcao_de_genero);
     int contarNumeroDeAlunosPeloGenero(std::deque<Estudante>& alunos, char opcao_de_genero);
 
-    void inserirTurma(std::string& turma_path, std::string& ano_escolaridade, std::string& turma, auto (Manager::*funcao_de_retorno) ());
+    void inserirTurma(std::string& turma_path, int& ano_escolaridade, std::string& turma, auto (Manager::*funcao_de_retorno) ());
     void inserirAnoDeEscolaridadeEntreClasses(int& registo_de_ano_escolaridadeA, int& registo_de_ano_escolaridadeB, auto (Manager::*funcao_de_retorno) ());
 
     void pesquisarAlunos();
@@ -137,7 +137,7 @@ private:
     void apagarRegistoAluno();
     void transferirAlunoDeTurma();
 
-    bool procurarAluno(std::deque<Estudante>& deque_alunos, int& indice_aluno, const std::string& numero_do_aluno_);
+    bool procurarAluno(std::deque<Estudante>& deque_alunos, int& indice_aluno, const int& numero_do_aluno);
     void atualizarTurmaAposEdicao(std::string file_path, std::deque<Estudante>& deque_alunos);
     void transferirUmAlunoDeTurma(std::deque<Estudante>& deque_alunos);
 

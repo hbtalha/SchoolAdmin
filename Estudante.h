@@ -10,9 +10,10 @@ public:
     Estudante () {}
     ~Estudante () {}
 
-    std::string ano_escolaridade;
+    int ano_escolaridade;
     std::string turma;
-    std::string numero_do_aluno;
+    std::string ano_e_turma;
+    int numero_do_aluno;
 
     void registar (std::string estu_info);
 
