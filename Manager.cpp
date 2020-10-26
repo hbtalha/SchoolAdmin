@@ -1623,8 +1623,6 @@ void Manager::registarAlunos()
                             to_string(ano_escolaridade) + " " +
                             turma_ + " " + "1";
 
-    cout << info_estudante;cin.get();
-
 
     if (util::seFicheiroVazio(this, &paginaInicial, file_path, "registarAlunos"))
     {
@@ -4610,26 +4608,18 @@ int  Manager::contarNumeroDeAlunosPeloGenero(deque<Estudante>& alunos, char opca
 {
     int numero_de_alunos = 0;
 
-    for ( int i = 0, len = alunos.size(); i < len; ++i)
+    if (opcao_de_genero == '1')
+        return count_if(alunos.begin(), alunos.end(), [](Estudante const& es)
     {
-        if (opcao_de_genero == '1')
-        {
-            if (alunos[i].genero == 'M')
-                ++numero_de_alunos;
-        }
-        else if (opcao_de_genero == '2')
-        {
-            if (alunos[i].genero == 'F')
-                ++numero_de_alunos;
-        }
-        else if (opcao_de_genero == '3')
-        {
-            numero_de_alunos = len;
-            break;
-        }
-    }
-
-    return numero_de_alunos;
+        return es.genero == 'M';
+    });
+    else if (opcao_de_genero == '2')
+        return count_if(alunos.begin(), alunos.end(), [](Estudante const& es)
+    {
+        return es.genero == 'F';
+    });
+    else
+        return alunos.size();
 }
 
 bool Manager::ordenarAlunosPorMorada(const Estudante& es1, const Estudante& es2)
@@ -4669,9 +4659,9 @@ bool Manager::ordenarAlunosPorIdadeDecrescente(const Estudante& es1, const Estud
     return (es1.idade > es2.idade);
 }
 
-bool Manager::turmaExiste(string path, string turma)
+bool Manager::turmaExiste(string file_path, string turma)
 {
-    return std::filesystem::exists(path + "/" + turma);
+    return std::filesystem::exists(file_path + "/" + turma);
 }
 
 void Manager::sair()

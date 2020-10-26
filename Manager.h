@@ -75,7 +75,7 @@ private:
     std::vector<std::string> area_3_ciclo_path = {"/CT/", "/ES/", "/H/"};
 
     void registarAlunos();
-    bool turmaExiste(std::string path, std::string turma);
+    bool turmaExiste(std::string file_path, std::string turma);
     void verAlunos();
     void verAlunosPorClasse();
     void verAlunosPorTurma();
