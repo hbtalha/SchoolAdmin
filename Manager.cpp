@@ -1727,10 +1727,10 @@ void Manager::atribuirNumeroAosAlunos_e_OrganizarPorOdemAlfabetica(std::string f
 
     sort(dequeEstdnt.begin(), dequeEstdnt.end(), ordenarAlunosPorNomeCrescente);
 
-    for ( int i = 0, len = dequeEstdnt.size(); i < len; ++i)
+    for_each(dequeEstdnt.begin(), dequeEstdnt.end(), [](Estudante& e, int i = 1)
     {
-        dequeEstdnt[i].numero_do_aluno = i+1;
-    }
+        e.numero_do_aluno = i++;
+    });
 
     util::set_a_FileAttribute_To_ReadOnly_or_Normal(file_path, FILE_ATTRIBUTE_NORMAL);
 
