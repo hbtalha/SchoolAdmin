@@ -22,6 +22,7 @@ void adicionarEspacos(std::string& str);
 void dataDaInauguracaoDaEscola(Manager *m, std::string& s_ano, std::string& s_mes, std::string& s_dia);
 
 std::string inputRestriction(int length_limit, int limite, bool chck, Manager *m, void (Manager::*funcao_de_retorno) (), int& _data);
+std::string inputRestriction(int length_limit, int limite, bool chck, Manager *m, void (Manager::*funcao_de_retorno) ());
 void validarInput(std::string& input, Manager *m, void (Manager::*funcao_de_retorno) ());
 bool dataValido(const int& ano, const int& mes, const int& dia);
 

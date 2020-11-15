@@ -299,6 +299,123 @@ string inputRestriction(int length_limit, int limite, bool chck, Manager *m, voi
     return s_in;
 }
 
+string inputRestriction(int length_limit, int limite, bool chck, Manager *m, void (Manager::*funcao_de_retorno)() )
+{
+    string s_in;
+    char ch_;
+    int length = 1, c_a;
+    bool brk = false; //
+
+    do
+    {
+        ch_ = _getch();
+
+        if (ch_ == 27)
+            (m->*funcao_de_retorno)();
+
+        while (ch_ == 13 && length <= length_limit)
+        {
+            if (s_in.empty())
+                cout << "\b  \b";
+
+            ch_ = getch();
+
+            // if the user wishes to go back to the menu he/she presses esc
+            if (ch_ == 27)
+                (m->*funcao_de_retorno)();
+        }
+
+        while (ch_ != 13)
+        {
+            bool bkr = false;
+
+            if (ch_ == '0' && s_in.empty()) // condicao que proibe o input de 0 como o primeiro carater
+                bkr = true;
+
+            if (s_in.empty())
+            {
+                cout << "  \b";
+            }
+
+            if (ch_ == 8)
+            {
+                if ( ! s_in.empty())
+                {
+                    -- length;
+                    s_in.pop_back();
+                }
+
+                cout << "\b \b";
+            }
+            else if (length <= length_limit && isdigit(ch_) && ! bkr)
+            {
+                if (s_in.empty())
+                    cout << "\b \b";
+
+                s_in.push_back(ch_);
+
+                cout << ch_;
+
+                ++length;
+            }
+            else if ( s_in.empty())
+            {
+                cout << "\b \b";
+            }
+
+            ch_ = _getch();
+
+            if (ch_ == 27)
+                (m->*funcao_de_retorno)();
+
+            if (chck == false)
+            {
+                while (ch_ == 13 && length <= length_limit)
+                {
+                    if (s_in.empty())
+                    {
+                        cout << " \b";
+                    }
+
+                    ch_ = _getch();
+
+                    if (ch_ == 27)
+                        (m->*funcao_de_retorno)();
+                }
+            }
+
+            if (chck)
+            {
+                if (ch_ == 13 && s_in.size() == 1 && s_in[1] != '0')
+                    brk = true;
+
+                while (ch_ == 13 && s_in.empty())
+                {
+                    if (s_in.empty())
+                    {
+                        cout << " \b";
+                    }
+
+                    ch_ = _getch();
+
+                    if (ch_ == 27)
+                        (m->*funcao_de_retorno)();
+                }
+            }
+        }
+
+        c_a = stoi(s_in.c_str());
+
+        // condicao que irá garantir que caso o numero limite for de apenas um carater o while nao ira ter um break
+        // caso nao for apropriado
+        if (c_a > limite)
+            brk = false;
+    }
+    while ( c_a > limite && ! brk );
+
+    return s_in;
+}
+
 void criarPastasPrincipais()
 {
     create_directories(Diretorios::ESCOLAS_INFO);
