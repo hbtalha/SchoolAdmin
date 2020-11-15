@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <windows.h>
 #include <filesystem>
+#include <ranges>
 
 #include "Manager.h"
 #include "Diretorios.h"
@@ -2121,7 +2122,6 @@ void Manager::verAlunosPorTurma()
 
         verAlunos();
     }
-
 }
 
 void Manager::verTodosOsAlunosDaEscola()
@@ -4156,7 +4156,7 @@ void Manager::editarInformacoesDoAluno(bool editar_tudo, int opcao, deque<Estuda
     if (editar_tudo || opcao == 6)
     {
         cout << endl << endl << "  Novo Numero de Identificacao Civil: ";
-        util::inputRestriction(6, 1000000, false, this, &Manager::editarAlunos, aluno_a_edtitar[0].numero_identificacao_civil);
+        aluno_a_edtitar[0].numero_identificacao_civil = util::inputRestriction(6, 1000000, false, this, &Manager::editarAlunos);
     }
 }
 
@@ -4596,7 +4596,7 @@ void Manager::encontrarAlunosPeloNumeroBI(deque<Estudante>& alunos, deque<Estuda
 {
     for ( int i = 0, len = alunos.size(); i < len; ++i)
     {
-        if (alunos[i].numero_identificacao_civil == n_bi)
+        if (alunos[i].numero_identificacao_civil == to_string(n_bi))
         {
             alunos_encontrados.push_back(alunos[i]);
             break;
@@ -4606,8 +4606,6 @@ void Manager::encontrarAlunosPeloNumeroBI(deque<Estudante>& alunos, deque<Estuda
 
 int  Manager::contarNumeroDeAlunosPeloGenero(deque<Estudante>& alunos, char opcao_de_genero)
 {
-    int numero_de_alunos = 0;
-
     if (opcao_de_genero == '1')
         return count_if(alunos.begin(), alunos.end(), [](Estudante const& es)
     {
