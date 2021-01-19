@@ -4044,7 +4044,7 @@ void Manager::editarInformacoesAluno()
 
             editarInformacoesDoAluno(editar_tudo, opcao, deque_aluno_a_editar);
 
-            swap(deque_alunos[0], deque_alunos[indice_aluno]);
+            swap(deque_alunos.front(), deque_alunos[indice_aluno]);
 
             deque_alunos.pop_front();
             deque_alunos.push_back(deque_aluno_a_editar[0]);
