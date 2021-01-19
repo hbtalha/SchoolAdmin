@@ -16,9 +16,7 @@ void displayAuthor()
 
 void changeConsoleTextColor()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    SetConsoleTextAttribute(hConsole, 2);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
 }
 
 void ajustarTamanhoJanelaOriginal()
