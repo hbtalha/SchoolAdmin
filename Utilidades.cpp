@@ -548,15 +548,13 @@ void pressionarEnter()
 
 void set_a_FileAttribute_To_ReadOnly_or_Normal(string filepath, DWORD flag)
 {
-    const char* file_path = filepath.c_str();
-
     if (flag == FILE_ATTRIBUTE_READONLY)
     {
-        SetFileAttributesA(file_path, FILE_ATTRIBUTE_READONLY);
+        SetFileAttributesA(filepath.c_str(), FILE_ATTRIBUTE_READONLY);
     }
     else if (flag == FILE_ATTRIBUTE_NORMAL)
     {
-        SetFileAttributesA(file_path, FILE_ATTRIBUTE_NORMAL);
+        SetFileAttributesA(filepath.c_str(), FILE_ATTRIBUTE_NORMAL);
     }
 }
 
